@@ -3,6 +3,7 @@
   <head>
     <title>Pete Herman</title>
     <link type="text/css" rel="stylesheet" href="style.css">
+    <script src="/wasm_exec.js"></script>
   </head>
   <body>
     <div id="nav-bar">
@@ -16,6 +17,31 @@
       <p>The Aerospace Corporation</p>
       <a href="https://github.com/peteherman">GitHub</a>
       <a href="https://www.linkedin.com/in/peter-herman-885633158/">LinkedIn</a>
+    </div>
+    <div id="wasm-container">
+      <script type="text/javascript">
+        const go = new Go();
+        const WASM_URL = 'wasm.wasm';
+        var wasm;
+        if ('instantiateStreaming' in WebAssembly) {
+            console.log("Instantiate streaming!")
+	    WebAssembly.instantiateStreaming(fetch(WASM_URL), go.importObject).then(            function (obj) {
+		wasm = obj.instance;
+		go.run(wasm);
+                encrypt("Test encrypt!");
+	    })
+        } else {
+	    fetch(WASM_URL).then(resp =>
+		resp.arrayBuffer()
+	    ).then(mod => WebAssembly.compile(mod))
+             .then(module => {
+                 let instance = new WebAssembly.Instance(module);
+                 console.log(instance.exports);
+             });
+        }
+                
+        
+      </script>
     </div>
     <br>
     <br>
@@ -37,7 +63,7 @@
         <h2 id="education">Education &amp; Certifications</h2>
         <div class="education-container">
           <h3>Georgia Institute of Technology</h3>
-          <p>B.S Computer Science</p>
+          <p>B.S. Computer Science</p>
           <p>August 2017 - May 2021</p>
         </div>
         <br>
@@ -51,12 +77,17 @@
           <p>In-Progress</p>
         </div>                
       </div>
+      <!-- <div class="info-panel"> -->
+      <!--   <h2 id="Resume">Resume</h2> -->
+      <!--   <iframe src="/PeterHerman_Resume_Aero21.pdf" width="75%" height="800px"> -->
+      <!--   </iframe> -->
+      <!-- </div> -->
       <div class="info-panel">
         <h2 id="projects">Projects</h2>
         <div class="inline-container">
           <div id="pc-boozy" class="project-container">
             <h3>Boozy</h3>
-            <p>A new social media night-life app. Intended to tell
+            <p>A new social media night-life app intended to tell
               you where your friends are headed tonight.
             </p>
             <div class="label-container">

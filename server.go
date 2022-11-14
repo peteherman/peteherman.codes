@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-const SERVER_PORT = 8080
+const SERVER_PORT = 443
 
 func main() {
 	// Create new base Mux
@@ -20,10 +20,11 @@ func main() {
 
 	// Configure webserver uri
 	server_uri := fmt.Sprintf(":%v", SERVER_PORT)
-	
-	// Start the webserver	
-	log.Println("Starting Web Server")	
-	if err := http.ListenAndServe(server_uri, loggerMux); err != nil {
+
+	// Start the webserver
+	log.Println("Starting Web Server")
+	if err := http.ListenAndServeTLS(server_uri, "server.crt", "server.key",
+		loggerMux); err != nil {
 		log.Fatal(err)
 	}
 }
